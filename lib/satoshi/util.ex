@@ -3,7 +3,7 @@ defmodule Satoshi.Util do
   Shared functions/utilities for all other modules.
   """
 
-  @doc """
+  @doc ~S"""
   Hash a value with SHA256 twice.
 
   ## Examples
