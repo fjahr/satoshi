@@ -13,11 +13,14 @@ defmodule Satoshi.Own.FieldElementTest do
   end
 
   test "combinatory methods raise if primes don't match" do
-    first = %FieldElement{value: 27, prime: 32}
-    second = %FieldElement{value: 12, prime: 31}
+    methods = [:add, :sub]
+    for method <- methods do
+      first = %FieldElement{value: 27, prime: 32}
+      second = %FieldElement{value: 12, prime: 31}
 
-    assert_raise ArgumentError, fn ->
-      FieldElement.add(first, second)
+      assert_raise ArgumentError, fn ->
+        apply(FieldElement, method, [first, second])
+      end
     end
   end
 
