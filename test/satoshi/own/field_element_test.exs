@@ -12,7 +12,16 @@ defmodule Satoshi.Own.FieldElementTest do
     assert %FieldElement{value: 8, prime: 31} == result
   end
 
-  test "combinatory methods raise if primes don't match" do
+  test "sub works for valid field elements" do
+    first = %FieldElement{value: 7, prime: 31}
+    second = %FieldElement{value: 12, prime: 31}
+
+    result = FieldElement.sub(first, second)
+
+    assert %FieldElement{value: 5, prime: 31} == result
+  end
+
+  test "combinatory methods raise error if primes don't match" do
     methods = [:add, :sub]
     for method <- methods do
       first = %FieldElement{value: 27, prime: 32}
