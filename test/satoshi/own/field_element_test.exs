@@ -39,6 +39,15 @@ defmodule Satoshi.Own.FieldElementTest do
     assert %FieldElement{value: 4, prime: 31} == result
   end
 
+  test "pow works for valid field elements" do
+    first = %FieldElement{value: 7, prime: 31}
+    second = 5
+
+    result = FieldElement.pow(first, second)
+
+    assert %FieldElement{value: 5, prime: 31} == result
+  end
+
   test "combinatory methods raise error if primes don't match" do
     methods = [:add, :sub, :mul, :rmul]
 

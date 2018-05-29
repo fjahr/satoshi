@@ -34,6 +34,16 @@ defmodule Satoshi.Own.FieldElement do
   end
   def rmul(_, _), do: raise ArgumentError
 
+  def pow(%{value: val1, prime: prime}, val2) when is_integer(val2) do
+    new_value = :math.pow(val1, val2)
+      |> round()
+      |> rem(prime)
+      |> abs()
+
+    %__MODULE__{value: new_value, prime: prime}
+  end
+  def pow(_, _), do: raise ArgumentError
+
 
 
 end
