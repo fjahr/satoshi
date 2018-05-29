@@ -30,8 +30,18 @@ defmodule Satoshi.Own.FieldElementTest do
     assert %FieldElement{value: 22, prime: 31} == result
   end
 
+  test "rmul works for valid field elements" do
+    first = %FieldElement{value: 7, prime: 31}
+    second = 5
+
+    result = FieldElement.rmul(first, second)
+
+    assert %FieldElement{value: 4, prime: 31} == result
+  end
+
   test "combinatory methods raise error if primes don't match" do
-    methods = [:add, :sub, :mul]
+    methods = [:add, :sub, :mul, :rmul]
+
     for method <- methods do
       first = %FieldElement{value: 27, prime: 32}
       second = %FieldElement{value: 12, prime: 31}
