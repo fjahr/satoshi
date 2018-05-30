@@ -51,6 +51,19 @@ defmodule Satoshi.Own.FieldElement do
   end
   def pow(_, _), do: raise ArgumentError
 
+  def div(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
+    new_value = :math.pow(val2, prime - 2)
+      |> round()
+      |> rem(prime)
+      |> abs()
+      |> Kernel.*(val1)
+      |> rem(prime)
+      |> abs()
+
+    %__MODULE__{value: new_value, prime: prime}
+  end
+  def div(_, _), do: raise ArgumentError
+
 
 
 end
