@@ -4,21 +4,27 @@ defmodule Satoshi.Own.FieldElementTest do
   alias Satoshi.Own.FieldElement
 
   test "add works for valid field elements" do
-    first = %FieldElement{value: 27, prime: 31}
-    second = %FieldElement{value: 12, prime: 31}
+    a = %FieldElement{value: 2, prime: 31}
+    b = %FieldElement{value: 15, prime: 31}
 
-    result = FieldElement.add(first, second)
+    assert %FieldElement{value: 17, prime: 31} == FieldElement.add(a, b)
 
-    assert %FieldElement{value: 8, prime: 31} == result
+    a = %FieldElement{value: 17, prime: 31}
+    b = %FieldElement{value: 21, prime: 31}
+
+    assert %FieldElement{value: 7, prime: 31} == FieldElement.add(a, b)
   end
 
   test "sub works for valid field elements" do
-    first = %FieldElement{value: 7, prime: 31}
-    second = %FieldElement{value: 12, prime: 31}
+    a = %FieldElement{value: 29, prime: 31}
+    b = %FieldElement{value: 4, prime: 31}
 
-    result = FieldElement.sub(first, second)
+    assert %FieldElement{value: 25, prime: 31} == FieldElement.sub(a, b)
 
-    assert %FieldElement{value: 5, prime: 31} == result
+    a = %FieldElement{value: 15, prime: 31}
+    b = %FieldElement{value: 30, prime: 31}
+
+    assert %FieldElement{value: 16, prime: 31} == FieldElement.sub(a, b)
   end
 
   test "mul works for valid field elements" do

@@ -15,9 +15,16 @@ defmodule Satoshi.Own.FieldElement do
   def add(_, _), do: raise ArgumentError
 
   def sub(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
-    new_value = val1 - val2
-      |> rem(prime)
-      |> abs()
+    sub_value = val1 - val2
+
+    new_value =
+      if sub_value < 0 do
+        prime + sub_value
+      else
+        sub_value
+          |> rem(prime)
+          |> abs()
+      end
 
     %__MODULE__{value: new_value, prime: prime}
   end
