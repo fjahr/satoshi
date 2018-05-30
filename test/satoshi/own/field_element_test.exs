@@ -43,12 +43,18 @@ defmodule Satoshi.Own.FieldElementTest do
   end
 
   test "pow works for valid field elements" do
-    first = %FieldElement{value: 7, prime: 31}
-    second = 5
+    a = %FieldElement{value: 17, prime: 31}
+    b = 3
 
-    result = FieldElement.pow(first, second)
+    assert %FieldElement{value: 15, prime: 31} == FieldElement.pow(a, b)
 
-    assert %FieldElement{value: 5, prime: 31} == result
+    a = %FieldElement{value: 5, prime: 31}
+    b = %FieldElement{value: 18, prime: 31}
+
+    result = FieldElement.pow(a, 5)
+             |> FieldElement.mul(b)
+
+    assert %FieldElement{value: 16, prime: 31} == result
   end
 
   test "div works for valid field elements" do

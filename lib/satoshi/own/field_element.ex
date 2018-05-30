@@ -8,7 +8,7 @@ defmodule Satoshi.Own.FieldElement do
 
   def add(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
     new_value = val1 + val2
-      |> rem(prime)
+                |> rem(prime)
 
     %__MODULE__{value: new_value, prime: prime}
   end
@@ -22,8 +22,8 @@ defmodule Satoshi.Own.FieldElement do
         prime + sub_value
       else
         sub_value
-          |> rem(prime)
-          |> abs()
+        |> rem(prime)
+        |> abs()
       end
 
     %__MODULE__{value: new_value, prime: prime}
@@ -32,8 +32,8 @@ defmodule Satoshi.Own.FieldElement do
 
   def mul(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
     new_value = val1 * val2
-      |> rem(prime)
-      |> abs()
+                |> rem(prime)
+                |> abs()
 
     %__MODULE__{value: new_value, prime: prime}
   end
@@ -41,8 +41,8 @@ defmodule Satoshi.Own.FieldElement do
 
   def rmul(%{value: val1, prime: prime}, val2) when is_integer(val2) do
     new_value = val1 * val2
-      |> rem(prime)
-      |> abs()
+                |> rem(prime)
+                |> abs()
 
     %__MODULE__{value: new_value, prime: prime}
   end
@@ -50,9 +50,9 @@ defmodule Satoshi.Own.FieldElement do
 
   def pow(%{value: val1, prime: prime}, val2) when is_integer(val2) do
     new_value = :math.pow(val1, val2)
-      |> round()
-      |> rem(prime)
-      |> abs()
+                |> round()
+                |> rem(prime)
+                |> abs()
 
     %__MODULE__{value: new_value, prime: prime}
   end
@@ -60,12 +60,12 @@ defmodule Satoshi.Own.FieldElement do
 
   def div(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
     new_value = :math.pow(val2, prime - 2)
-      |> round()
-      |> rem(prime)
-      |> abs()
-      |> Kernel.*(val1)
-      |> rem(prime)
-      |> abs()
+                |> round()
+                |> rem(prime)
+                |> abs()
+                |> Kernel.*(val1)
+                |> rem(prime)
+                |> abs()
 
     %__MODULE__{value: new_value, prime: prime}
   end
