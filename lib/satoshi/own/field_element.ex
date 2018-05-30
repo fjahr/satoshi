@@ -2,9 +2,20 @@ defmodule Satoshi.Own.FieldElement do
   @moduledoc """
   Finite field element struct.
   """
+  alias Satoshi.Util
+
+  @prime Util.my_pow(2, 256) - Util.my_pow(2, 32) - 977
 
   @enforce_keys [:value, :prime]
   defstruct [:value, :prime]
+
+  def new(value: value, prime: prime) do
+    %__MODULE__{value: value, prime: prime}
+  end
+
+  def new_s256(value: value) do
+    %__MODULE__{value: value, prime: @prime}
+  end
 
   def add(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
     new_value = val1 + val2
@@ -52,11 +63,11 @@ defmodule Satoshi.Own.FieldElement do
     new_value =
       cond do
         val2 < 0 ->
-          my_pow(val1, prime - 1 + val2)
+          Util.my_pow(val1, prime - 1 + val2)
           |> rem(prime)
           |> abs()
         true ->
-          my_pow(val1, val2)
+          Util.my_pow(val1, val2)
           |> round()
           |> rem(prime)
           |> abs()
@@ -67,7 +78,7 @@ defmodule Satoshi.Own.FieldElement do
   def pow(_, _), do: raise ArgumentError
 
   def div(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
-    new_value = my_pow(val2, prime - 2)
+    new_value = Util.my_pow(val2, prime - 2)
                 |> round()
                 |> rem(prime)
                 |> abs()
@@ -78,17 +89,4 @@ defmodule Satoshi.Own.FieldElement do
     %__MODULE__{value: new_value, prime: prime}
   end
   def div(_, _), do: raise ArgumentError
-
-  @doc ~S"""
-  Implementation of the pow method with tail call optimization. Necessary since
-  the Erlang native :math.pow/2 does not allow for high integer powers.
-
-  ## Examples
-
-      iex> Satoshi.Own.FieldElement.my_pow(17, 27)
-      1667711322168688287513535727415473
-  """
-  def my_pow(n, k), do: my_pow(n, k, 1)
-  defp my_pow(_, 0, acc), do: acc
-  defp my_pow(n, k, acc), do: my_pow(n, k - 1, n * acc)
 end

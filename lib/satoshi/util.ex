@@ -31,5 +31,16 @@ defmodule Satoshi.Util do
     :crypto.hash(:ripemd160, :crypto.hash(:sha256, value))
   end
 
+  @doc ~S"""
+  Implementation of the pow method with tail call optimization. Necessary since
+  the Erlang native :math.pow/2 does not allow for high integer powers.
 
+  ## Examples
+
+      iex> Satoshi.Util.my_pow(17, 27)
+      1667711322168688287513535727415473
+  """
+  def my_pow(n, k), do: my_pow(n, k, 1)
+  defp my_pow(_, 0, acc), do: acc
+  defp my_pow(n, k, acc), do: my_pow(n, k - 1, n * acc)
 end

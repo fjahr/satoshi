@@ -2,6 +2,8 @@ defmodule Satoshi.Own.Point do
   @moduledoc """
   Finite field element struct.
   """
+  alias Satoshi.Own.FieldElement
+
   @s256a 0
   @s256b 7
 
@@ -11,11 +13,14 @@ defmodule Satoshi.Own.Point do
   @enforce_keys [:x, :y, :a, :b]
   defstruct [:x, :y, :a, :b]
 
-  def s256point(x, y) do
+  def s256point(raw_x, raw_y) do
+    x = FieldElement.new_s256(value: raw_x)
+    y = FieldElement.new_s256(value: raw_y)
+
     %__MODULE__{x: x, y: y, a: @s256a, b: @s256b}
   end
 
   def g() do
-    %__MODULE__{x: @gx, y: @gy, a: @s256a, b: @s256b}
+    s256point(@gx, @gy)
   end
 end
