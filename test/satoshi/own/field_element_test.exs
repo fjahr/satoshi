@@ -28,21 +28,18 @@ defmodule Satoshi.Own.FieldElementTest do
   end
 
   test "mul works for valid field elements" do
-    first = %FieldElement{value: 7, prime: 31}
-    second = %FieldElement{value: 12, prime: 31}
+    a = %FieldElement{value: 24, prime: 31}
+    b = %FieldElement{value: 19, prime: 31}
 
-    result = FieldElement.mul(first, second)
 
-    assert %FieldElement{value: 22, prime: 31} == result
+    assert %FieldElement{value: 22, prime: 31} == FieldElement.mul(a, b)
   end
 
   test "rmul works for valid field elements" do
-    first = %FieldElement{value: 7, prime: 31}
-    second = 5
+    a = %FieldElement{value: 24, prime: 31}
+    b = 2
 
-    result = FieldElement.rmul(first, second)
-
-    assert %FieldElement{value: 4, prime: 31} == result
+    assert FieldElement.add(a, a) == FieldElement.rmul(a, b)
   end
 
   test "pow works for valid field elements" do
