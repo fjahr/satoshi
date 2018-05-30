@@ -1,5 +1,6 @@
 defmodule Satoshi.Own.FieldElementTest do
   use ExUnit.Case, async: true
+  doctest Satoshi.Own.FieldElement
 
   alias Satoshi.Own.FieldElement
 
@@ -47,6 +48,11 @@ defmodule Satoshi.Own.FieldElementTest do
     b = 3
 
     assert %FieldElement{value: 15, prime: 31} == FieldElement.pow(a, b)
+
+    a = %FieldElement{value: 17, prime: 31}
+    b = -3
+
+    assert %FieldElement{value: 29, prime: 31} == FieldElement.pow(a, b)
 
     a = %FieldElement{value: 5, prime: 31}
     b = %FieldElement{value: 18, prime: 31}

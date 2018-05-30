@@ -49,17 +49,25 @@ defmodule Satoshi.Own.FieldElement do
   def rmul(_, _), do: raise ArgumentError
 
   def pow(%{value: val1, prime: prime}, val2) when is_integer(val2) do
-    new_value = :math.pow(val1, val2)
-                |> round()
-                |> rem(prime)
-                |> abs()
+    new_value =
+      cond do
+        val2 < 0 ->
+          my_pow(val1, prime - 1 + val2)
+          |> rem(prime)
+          |> abs()
+        true ->
+          my_pow(val1, val2)
+          |> round()
+          |> rem(prime)
+          |> abs()
+      end
 
     %__MODULE__{value: new_value, prime: prime}
   end
   def pow(_, _), do: raise ArgumentError
 
   def div(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
-    new_value = :math.pow(val2, prime - 2)
+    new_value = my_pow(val2, prime - 2)
                 |> round()
                 |> rem(prime)
                 |> abs()
@@ -71,6 +79,16 @@ defmodule Satoshi.Own.FieldElement do
   end
   def div(_, _), do: raise ArgumentError
 
+  @doc ~S"""
+  Implementation of the pow method with tail call optimization. Necessary since
+  the Erlang native :math.pow/2 does not allow for high integer powers.
 
+  ## Examples
 
+      iex> Satoshi.Own.FieldElement.my_pow(17, 27)
+      1667711322168688287513535727415473
+  """
+  def my_pow(n, k), do: my_pow(n, k, 1)
+  defp my_pow(_, 0, acc), do: acc
+  defp my_pow(n, k, acc), do: my_pow(n, k - 1, n * acc)
 end
