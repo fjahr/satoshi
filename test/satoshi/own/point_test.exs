@@ -18,4 +18,10 @@ defmodule Satoshi.Own.PointTest do
                           }
                         }
   end
+
+  test "s256point raises error if point is not on curve" do
+    assert_raise ArgumentError, fn ->
+      Point.s256point(24, 220)
+    end
+  end
 end

@@ -17,10 +17,25 @@ defmodule Satoshi.Own.Point do
     x = FieldElement.new_s256(value: raw_x)
     y = FieldElement.new_s256(value: raw_y)
 
-    %__MODULE__{x: x, y: y, a: @s256a, b: @s256b}
+    p = %__MODULE__{x: x, y: y, a: @s256a, b: @s256b}
+
+    if point_on_s256?(p) do
+      p
+    else
+      raise ArgumentError
+    end
   end
 
   def g() do
     s256point(@gx, @gy)
+  end
+
+  defp point_on_s256?(p) do
+    left_side = FieldElement.pow(p.y, 2)
+    right_side = FieldElement.pow(p.x, 3)
+                 |> FieldElement.add(FieldElement.rmul(p.x, p.a))
+                 |> FieldElement.add(p.b)
+
+    left_side == right_side
   end
 end
