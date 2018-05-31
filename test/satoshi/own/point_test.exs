@@ -49,5 +49,29 @@ defmodule Satoshi.Own.PointTest do
 
     f = Point.new(x: 1, y: 1, a: 5, b: 7, prime: 223)
     assert Point.add(f, f) == Point.new(x: 14, y: 170, a: 5, b: 7, prime: 223)
+
+    additions = [
+      [192, 105, 17, 56, 170, 142],
+      [47, 71, 117, 141, 60, 139],
+      [143, 98, 76, 66, 47, 71],
+    ]
+
+    prime = 223
+    s256a = FieldElement.new(value: 0, prime: prime)
+    s256b = FieldElement.new(value: 7, prime: prime)
+
+    for [x1_raw, y1_raw, x2_raw, y2_raw, x3_raw, y3_raw] <- additions do
+      x1 = FieldElement.new(value: x1_raw, prime: prime)
+      y1 = FieldElement.new(value: y1_raw, prime: prime)
+      p1 = Point.new(x: x1, y: y1, a: s256a, b: s256b)
+      x2 = FieldElement.new(value: x2_raw, prime: prime)
+      y2 = FieldElement.new(value: y2_raw, prime: prime)
+      p2 = Point.new(x: x2, y: y2, a: s256a, b: s256b)
+      x3 = FieldElement.new(value: x3_raw, prime: prime)
+      y3 = FieldElement.new(value: y3_raw, prime: prime)
+      p3 = Point.new(x: x3, y: y3, a: s256a, b: s256b)
+
+      assert Point.add(p1, p2) == p3
+    end
   end
 end
