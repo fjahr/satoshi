@@ -74,4 +74,32 @@ defmodule Satoshi.Own.PointTest do
       assert Point.add(p1, p2) == p3
     end
   end
+
+  test "rmul/2 is scaling a point" do
+    prime = 223
+    a = FieldElement.new(value: 0, prime: prime)
+    b = FieldElement.new(value: 7, prime: prime)
+
+    multiplications = [
+      [2, 192, 105, 49, 71],
+      [2, 143, 98, 64, 168],
+      [2, 47, 71, 36, 111],
+      [4, 47, 71, 194, 51],
+      [8, 47, 71, 116, 55],
+      [21, 47, 71, nil, nil],
+    ]
+
+    for [s, x1_raw, y1_raw, x2_raw, y2_raw] <- multiplications do
+      x1 = FieldElement.new(value: x1_raw, prime: prime)
+      y1 = FieldElement.new(value: y1_raw, prime: prime)
+      p1 = Point.new(x: x1, y: y1, a: a, b: b)
+
+      x2 = FieldElement.new(value: x2_raw, prime: prime)
+      y2 = FieldElement.new(value: y2_raw, prime: prime)
+      p2 = Point.new(x: x2, y: y2, a: a, b: b)
+
+      assert Point.rmul(p1, s) == p2
+    end
+
+  end
 end

@@ -43,8 +43,8 @@ defmodule Satoshi.Own.Point do
   end
   def eq(_, _), do: false
 
-  def add(%__MODULE__{x: %{value: nil}, y: %{value: nil}, a: _, b: _}, p2), do: p2
-  def add(p1, %__MODULE__{x: %{value: nil}, y: %{value: nil}, a: _, b: _}), do: p1
+  def add(%__MODULE__{x: %{value: nil, prime: _}, y: %{value: nil, prime: _}, a: _, b: _}, p2), do: p2
+  def add(p1, %__MODULE__{x: %{value: nil, prime: _}, y: %{value: nil, prime: _}, a: _, b: _}), do: p1
   def add(%__MODULE__{x: x, y: y, a: a, b: b}, %__MODULE__{x: x, y: y, a: a, b: b}) do
     s = FieldElement.pow(x, 2)
         |> FieldElement.rmul(3)
@@ -78,6 +78,16 @@ defmodule Satoshi.Own.Point do
     new(x: new_x, y: new_y, a: a, b: b)
   end
   def add(_, _), do: raise ArgumentError, "Point addition not possible for these parameters"
+
+  def rmul(p, s) do
+    x = FieldElement.new(value: nil, prime: p.x.prime)
+    y = FieldElement.new(value: nil, prime: p.y.prime)
+
+    rmul(p, s, __MODULE__.new(x: x, y: y, a: p.a, b: p.b))
+  end
+  defp rmul(p, 0, product), do: product
+  defp rmul(p, s, product), do: rmul(p, s-1, __MODULE__.add(product, p))
+
 
   defp point_on_s256?(p) do
     left_side = FieldElement.pow(p.y, 2)

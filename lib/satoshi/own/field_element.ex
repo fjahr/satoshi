@@ -29,7 +29,7 @@ defmodule Satoshi.Own.FieldElement do
 
     %__MODULE__{value: new_value, prime: prime}
   end
-  def add(_, _), do: raise ArgumentError
+  def add(_, _), do: raise ArgumentError, "Parameters do not support point addition"
 
   def sub(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
     sub_value = val1 - val2
@@ -45,7 +45,7 @@ defmodule Satoshi.Own.FieldElement do
 
     %__MODULE__{value: new_value, prime: prime}
   end
-  def sub(_, _), do: raise ArgumentError
+  def sub(_, _), do: raise ArgumentError, "Parameters do not support subtraction"
 
   def mul(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
     new_value = val1 * val2
@@ -54,7 +54,8 @@ defmodule Satoshi.Own.FieldElement do
 
     %__MODULE__{value: new_value, prime: prime}
   end
-  def mul(_, _), do: raise ArgumentError
+  def mul(_, _), do: raise ArgumentError, "Parameters do not support multiplication"
+
 
   def rmul(%{value: val1, prime: prime}, val2) when is_integer(val2) do
     new_value = val1 * val2
@@ -63,7 +64,7 @@ defmodule Satoshi.Own.FieldElement do
 
     %__MODULE__{value: new_value, prime: prime}
   end
-  def rmul(_, _), do: raise ArgumentError
+  def rmul(_, _), do: raise ArgumentError, "Parameters do not support real multiplication"
 
   def pow(%{value: val1, prime: prime}, val2) when is_integer(val2) do
     new_value =
@@ -81,7 +82,7 @@ defmodule Satoshi.Own.FieldElement do
 
     %__MODULE__{value: new_value, prime: prime}
   end
-  def pow(_, _), do: raise ArgumentError
+  def pow(_, _), do: raise ArgumentError, "Paramets do not support power"
 
   def div(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
     new_value = Util.my_pow(val2, prime - 2)
@@ -94,5 +95,5 @@ defmodule Satoshi.Own.FieldElement do
 
     %__MODULE__{value: new_value, prime: prime}
   end
-  def div(_, _), do: raise ArgumentError
+  def div(_, _), do: raise ArgumentError, "Parameters do not support division"
 end
