@@ -60,7 +60,7 @@ defmodule Satoshi.Own.Point do
 
     new(x: new_x, y: new_y, a: a, b: b)
   end
-  def add(%__MODULE__{x: x, y: y1, a: a, b: b}, %__MODULE__{x: x, y: y2, a: a, b: b}) do
+  def add(%__MODULE__{x: x, y: _y1, a: a, b: b}, %__MODULE__{x: x, y: _y2, a: a, b: b}) do
     new(x: nil, y: nil, a: a, b: b, prime: x.prime)
   end
   def add(%__MODULE__{x: x1, y: y1, a: a, b: b}, %__MODULE__{x: x2, y: y2, a: a, b: b}) do
@@ -85,9 +85,8 @@ defmodule Satoshi.Own.Point do
 
     rmul(p, s, __MODULE__.new(x: x, y: y, a: p.a, b: p.b))
   end
-  defp rmul(p, 0, product), do: product
+  defp rmul(_p, 0, product), do: product
   defp rmul(p, s, product), do: rmul(p, s-1, __MODULE__.add(product, p))
-
 
   defp point_on_s256?(p) do
     left_side = FieldElement.pow(p.y, 2)
