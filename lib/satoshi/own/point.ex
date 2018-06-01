@@ -52,7 +52,7 @@ defmodule Satoshi.Own.Point do
         |> FieldElement.div(FieldElement.rmul(y, 2))
 
     new_x = FieldElement.pow(s, 2)
-        |> FieldElement.sub(FieldElement.rmul(x, 2))
+            |> FieldElement.sub(FieldElement.rmul(x, 2))
 
     new_y = FieldElement.sub(x, new_x)
             |> FieldElement.mul(s)
@@ -68,8 +68,8 @@ defmodule Satoshi.Own.Point do
         |> FieldElement.div(FieldElement.sub(x2, x1))
 
     new_x = FieldElement.pow(s, 2)
-        |> FieldElement.sub(x1)
-        |> FieldElement.sub(x2)
+            |> FieldElement.sub(x1)
+            |> FieldElement.sub(x2)
 
     new_y = FieldElement.sub(x1, new_x)
             |> FieldElement.mul(s)
