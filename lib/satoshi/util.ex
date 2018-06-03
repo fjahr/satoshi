@@ -1,4 +1,5 @@
 defmodule Satoshi.Util do
+  use Bitwise, only_operators: true
   @moduledoc """
   Shared functions/utilities for all other modules.
   """
@@ -43,4 +44,16 @@ defmodule Satoshi.Util do
   def my_pow(n, k), do: my_pow(n, k, 1)
   defp my_pow(_, 0, acc), do: acc
   defp my_pow(n, k, acc), do: my_pow(n, k - 1, n * acc)
+
+  @doc ~S"""
+  The my_pow method optimized for a finite field.
+  """
+  def my_fpow(n, k, prime), do: my_fpow(n, k, 1, prime)
+  defp my_fpow(_, 0, acc, _), do: acc
+  defp my_fpow(n, k, acc, prime) do
+    new_acc = n * acc
+              |> rem(prime)
+
+    my_fpow(n, k - 1, new_acc, prime)
+  end
 end

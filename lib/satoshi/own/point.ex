@@ -4,8 +4,8 @@ defmodule Satoshi.Own.Point do
   """
   alias Satoshi.Own.FieldElement
 
-  @s256a 0
-  @s256b 7
+  @s256a FieldElement.new_s256(value: 0)
+  @s256b FieldElement.new_s256(value: 7)
 
   @gx 0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798
   @gy 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
@@ -17,26 +17,30 @@ defmodule Satoshi.Own.Point do
     fe_x = FieldElement.new(value: x, prime: prime)
     fe_y = FieldElement.new(value: y, prime: prime)
 
-    %__MODULE__{x: fe_x, y: fe_y, a: a, b: b}
+    fe_a = FieldElement.new(value: a, prime: prime)
+    fe_b = FieldElement.new(value: b, prime: prime)
+
+    new(x: fe_x, y: fe_y, a: fe_a, b: fe_b)
   end
-  def new(x: x, y: y, a: a, b: b), do: %__MODULE__{x: x, y: y, a: a, b: b}
+  def new(x: x, y: y, a: a, b: b) do
+    p = %__MODULE__{x: x, y: y, a: a, b: b}
 
-  def s256point(raw_x, raw_y) do
-    x = FieldElement.new_s256(value: raw_x)
-    y = FieldElement.new_s256(value: raw_y)
-
-    p = %__MODULE__{x: x, y: y, a: @s256a, b: @s256b}
-
-    if point_on_s256?(p) do
+    if x.value == nil || point_on_curve?(p) do
       p
     else
-      raise ArgumentError, "Point is not on secp256k1"
+      raise ArgumentError, "Point not on curve"
     end
   end
 
-  def g() do
-    s256point(@gx, @gy)
+  def s256point(raw_x, raw_y) when is_integer(raw_x) do
+    x = FieldElement.new_s256(value: raw_x)
+    y = FieldElement.new_s256(value: raw_y)
+
+    new(x: x, y: y, a: @s256a, b: @s256b)
   end
+  def s256point(x, y), do: new(x: x, y: y, a: @s256a, b: @s256b)
+
+  def g(), do: s256point(@gx, @gy)
 
   def eq(%__MODULE__{x: x, y: y, a: a, b: b}, %__MODULE__{x: x, y: y, a: a, b: b}) do
     true
@@ -61,7 +65,7 @@ defmodule Satoshi.Own.Point do
     new(x: new_x, y: new_y, a: a, b: b)
   end
   def add(%__MODULE__{x: x, y: _y1, a: a, b: b}, %__MODULE__{x: x, y: _y2, a: a, b: b}) do
-    new(x: nil, y: nil, a: a, b: b, prime: x.prime)
+    new(x: nil, y: nil, a: a.value, b: b.value, prime: x.prime)
   end
   def add(%__MODULE__{x: x1, y: y1, a: a, b: b}, %__MODULE__{x: x2, y: y2, a: a, b: b}) do
     s = FieldElement.sub(y2, y1)
@@ -86,12 +90,14 @@ defmodule Satoshi.Own.Point do
     rmul(p, s, __MODULE__.new(x: x, y: y, a: p.a, b: p.b))
   end
   defp rmul(_p, 0, product), do: product
-  defp rmul(p, s, product), do: rmul(p, s-1, __MODULE__.add(product, p))
+  defp rmul(p, s, product) do
+    rmul(p, s-1, __MODULE__.add(product, p))
+  end
 
-  defp point_on_s256?(p) do
+  defp point_on_curve?(p) do
     left_side = FieldElement.pow(p.y, 2)
     right_side = FieldElement.pow(p.x, 3)
-                 |> FieldElement.add(FieldElement.rmul(p.x, p.a))
+                 |> FieldElement.add(FieldElement.mul(p.x, p.a))
                  |> FieldElement.add(p.b)
 
     left_side == right_side

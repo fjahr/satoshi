@@ -85,10 +85,7 @@ defmodule Satoshi.Own.FieldElement do
   def pow(_, _), do: raise ArgumentError, "Paramets do not support power"
 
   def div(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
-    new_value = Util.my_pow(val2, prime - 2)
-                |> round()
-                |> rem(prime)
-                |> abs()
+    new_value = Util.my_fpow(val2, prime - 2, prime)
                 |> Kernel.*(val1)
                 |> rem(prime)
                 |> abs()
