@@ -91,7 +91,10 @@ defmodule Satoshi.Own.Point do
   end
   defp rmul(_p, 0, product), do: product
   defp rmul(p, s, product) do
-    rmul(p, s-1, __MODULE__.add(product, p))
+    product = if rem(s, 2) == 1, do: __MODULE__.add(product, p), else: product
+    p = __MODULE__.add(p, p)
+    s = div(s, 2)
+    rmul(p, s, product)
   end
 
   defp point_on_curve?(p) do
