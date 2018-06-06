@@ -1,5 +1,5 @@
 defmodule Satoshi.Util do
-  use Bitwise, only_operators: true
+  require Integer
   @moduledoc """
   Shared functions/utilities for all other modules.
   """
@@ -38,22 +38,28 @@ defmodule Satoshi.Util do
 
   ## Examples
 
-      iex> Satoshi.Util.my_pow(17, 27)
+      iex> Satoshi.Util.pow(17, 27)
       1667711322168688287513535727415473
   """
-  def my_pow(n, k), do: my_pow(n, k, 1)
-  defp my_pow(_, 0, acc), do: acc
-  defp my_pow(n, k, acc), do: my_pow(n, k - 1, n * acc)
+  def pow(n, k), do: pow(n, k, 1)
+  defp pow(_, 0, r), do: r
+  defp pow(n, k, r) do
+    r = if rem(k, 2) == 1, do: r * n, else: r
+    n = n * n
+    k = div(k, 2)
+    pow(n, k, r)
+  end
 
   @doc ~S"""
   The my_pow method optimized for a finite field.
   """
-  def my_fpow(n, k, prime), do: my_fpow(n, k, 1, prime)
-  defp my_fpow(_, 0, acc, _), do: acc
-  defp my_fpow(n, k, acc, prime) do
-    new_acc = n * acc
-              |> rem(prime)
-
-    my_fpow(n, k - 1, new_acc, prime)
+  def powmod(n, k, m), do: powmod(n, k, m, 1)
+  def powmod(_, 0, _, r), do: r
+  def powmod(n, k, m, r) do
+    r = if rem(k, 2) == 1, do: rem(r * n, m), else: r
+    n = rem(n * n, m)
+    k = div(k, 2)
+    powmod(n, k, m, r)
   end
+
 end

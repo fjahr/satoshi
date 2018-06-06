@@ -4,7 +4,7 @@ defmodule Satoshi.Own.FieldElement do
   """
   alias Satoshi.Util
 
-  @prime Util.my_pow(2, 256) - Util.my_pow(2, 32) - 977
+  @prime Util.pow(2, 256) - Util.pow(2, 32) - 977
 
   @enforce_keys [:value, :prime]
   defstruct [:value, :prime]
@@ -70,11 +70,11 @@ defmodule Satoshi.Own.FieldElement do
     new_value =
       cond do
         val2 < 0 ->
-          Util.my_pow(val1, prime - 1 + val2)
+          Util.pow(val1, prime - 1 + val2)
           |> rem(prime)
           |> abs()
         true ->
-          Util.my_pow(val1, val2)
+          Util.pow(val1, val2)
           |> round()
           |> rem(prime)
           |> abs()
@@ -85,7 +85,7 @@ defmodule Satoshi.Own.FieldElement do
   def pow(_, _), do: raise ArgumentError, "Paramets do not support power"
 
   def div(%{value: val1, prime: prime}, %{value: val2, prime: prime}) do
-    new_value = Util.my_fpow(val2, prime - 2, prime)
+    new_value = Util.powmod(val2, prime - 2, prime)
                 |> Kernel.*(val1)
                 |> rem(prime)
                 |> abs()
