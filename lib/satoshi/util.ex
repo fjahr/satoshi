@@ -32,6 +32,10 @@ defmodule Satoshi.Util do
     :crypto.hash(:ripemd160, :crypto.hash(:sha256, value))
   end
 
+  def encode_base58!(value) do
+    Satoshi.Base58.encode!(value)
+  end
+
   @doc ~S"""
   Implementation of the pow method with tail call optimization. Necessary since
   the Erlang native :math.pow/2 does not allow for high integer powers.

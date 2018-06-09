@@ -25,4 +25,27 @@ defmodule Satoshi.OwnTest do
     assert Own.my_sec(secret: s, compressed: false) == Base.decode16!(uncompressed, case: :lower)
     assert Own.my_sec(secret: s, compressed: true) == Base.decode16!(compressed, case: :lower)
   end
+
+  test "address/1" do
+    s = Util.pow(888, 3)
+    mainnet_address = "148dY81A9BmdpMhvYEVznrM45kWN32vSCN"
+    testnet_address = "mieaqB68xDCtbUBYFoUNcmZNwk74xcBfTP"
+
+    assert Own.my_address(s, blockchain: :mainnet) == mainnet_address
+    assert Own.my_address(s) == testnet_address
+
+    s = 321
+    mainnet_address = "1S6g2xBJSED7Qr9CYZib5f4PYVhHZiVfj"
+    testnet_address = "mfx3y63A7TfTtXKkv7Y6QzsPFY6QCBCXiP"
+
+    assert Own.my_address(s, compressed: false, blockchain: :mainnet) == mainnet_address
+    assert Own.my_address(s, compressed: false) == testnet_address
+
+    s = 4242424242
+    mainnet_address = "1226JSptcStqn4Yq9aAmNXdwdc2ixuH9nb"
+    testnet_address = "mgY3bVusRUL6ZB2Ss999CSrGVbdRwVpM8s"
+
+    assert Own.my_address(s, compressed: false, blockchain: :mainnet) == mainnet_address
+    assert Own.my_address(s, compressed: false) == testnet_address
+  end
 end
