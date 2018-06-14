@@ -5,6 +5,10 @@ defmodule Satoshi.Own.PointTest do
   alias Satoshi.Own.{FieldElement, Point}
   alias Satoshi.Util
 
+  test "n() returns the order" do
+    assert Point.n() == 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
+  end
+
   test "g() returns the s256 generator point" do
     assert Point.g() == %Satoshi.Own.Point{
                           a: %FieldElement{
